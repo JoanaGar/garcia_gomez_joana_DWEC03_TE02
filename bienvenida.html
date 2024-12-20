@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Puzzle Numérico - Bienvenida</title>
+  <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Bienvenido al Puzzle Numérico</h1>
+    <p>Selecciona tu nivel de dificultad:</p>
+    <button onclick="startGame(1)">Fácil</button>
+    <button onclick="startGame(2)">Medio</button>
+    <button onclick="startGame(3)">Difícil</button>
+  </div>
+  <script>
+    function startGame(level) {
+      localStorage.setItem('level', level);
+      window.location.href = 'juego.html';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Puzzle Numérico - Juego</title>
+  <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="timer" id="timer">Tiempo: 100s</div>
+    <div class="game-area" id="game-area"></div>
+  </div>
+    <script>
+        // Configuración inicial
+        const timerElement = document.getElementById("timer");
+        const boardElement = document.getElementById("game-area");
+        let timer = 100;
+        let timerInterval;
+        let hasWon = false;
+
+        // Estado inicial del tablero
+        const board = [...Array(15).keys()].map(n => n + 1); // Números del 1 al 15
+        board.push(""); // Espacio vacío
+        shuffleArray(board);
+
+        // Crear el tablero
+        const createBoard = () => {
+            boardElement.innerHTML = ""; // Limpiar el tablero
+            board.forEach((value, index) => {
+                const cell = document.createElement("div");
+                cell.classList.add("cell");
+                if (value === "") {
+                    cell.classList.add("empty"); // Espacio vacío
+                } else {
+                    cell.textContent = value;
+                    cell.addEventListener("click", () => moveTile(index));
+                }
+                boardElement.appendChild(cell);
+            });
+        };
+
+        // Función para mezclar el tablero
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // Función para mover una ficha
+        const moveTile = (index) => {
+            const emptyIndex = board.indexOf("");
+            const validMoves = [emptyIndex - 1, emptyIndex + 1, emptyIndex - 4, emptyIndex + 4]; // Movimientos válidos
+
+            // Verificar si el movimiento es válido
+            if (validMoves.includes(index) &&
+                !(index % 4 === 0 && emptyIndex % 4 === 3) && // Evitar saltos a la izquierda
+                !(index % 4 === 3 && emptyIndex % 4 === 0)) { // Evitar saltos a la derecha
+                [board[emptyIndex], board[index]] = [board[index], board[emptyIndex]]; // Intercambiar
+                createBoard();
+                checkWin(); // Comprobar si el jugador ganó
+            }
+        };
+
+        // Comprobar si el jugador ganó
+        const checkWin = () => {
+            const winningBoard = [...Array(15).keys()].map(n => n + 1).concat(""); // Estado final
+            if (JSON.stringify(board) === JSON.stringify(winningBoard)) {
+                clearInterval(timerInterval);
+                hasWon = true;
+                redirectToResults();
+            }
+        };
+
+        // Función para manejar el temporizador
+        const startTimer = () => {
+            timerInterval = setInterval(() => {
+                timerElement.textContent = `Tiempo: ${timer}s`;
+                timer--;
+                if (timer <= 0) {
+                    clearInterval(timerInterval);
+                    redirectToResults();
+                }
+            }, 1000);
+        };
+
+        // Redirigir a la página de resultados
+        const redirectToResults = () => {
+            localStorage.setItem("gameResult", hasWon ? "win" : "lose");
+            localStorage.setItem("remainingTime", timer);
+            window.location.href = "resultados.html";
+        };
+
+        // Inicializar el juego
+        createBoard();
+        startTimer();
+    </script>
+</body>
+</html>

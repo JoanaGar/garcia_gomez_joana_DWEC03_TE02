@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Puzzle Numérico - Resultados</title>
+  <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1 id="resultado"></h1>
+    <p id="detalles"></p>
+    <div class="buttons">
+      <button onclick="reiniciar()">Reiniciar Juego</button>
+      <button onclick="salir()">Salir al Login</button>
+    </div>
+  </div>
+
+    <script>
+        // Recuperar resultados del juego desde el localStorage
+        const gameResult = localStorage.getItem("gameResult");
+        const remainingTime = localStorage.getItem("remainingTime");
+
+        // Mostrar resultados
+        const resultElement = document.getElementById("result");
+        const detailsElement = document.getElementById("details");
+
+        if (gameResult === "win") {
+            resultElement.textContent = "¡Felicidades! Has ganado el juego.";
+            detailsElement.textContent = `Tiempo restante: ${remainingTime}s.`;
+        } else {
+            resultElement.textContent = "Lo siento, has perdido el juego.";
+            detailsElement.textContent = "El tiempo se ha agotado.";
+        }
+
+        // Función para reiniciar el juego
+        const restartGame = () => {
+            window.location.href = "bienvenida.html"; // Redirigir a la página de bienvenida
+        };
+
+        // Función para salir al login
+        const goToLogin = () => {
+            localStorage.clear(); // Limpiar datos almacenados en el localStorage
+            window.location.href = "index.html"; // Redirigir a la página de login
+        };
+    </script>
+</body>
+</html>
